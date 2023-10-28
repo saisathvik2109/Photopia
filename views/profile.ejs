@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<head>
+    <title>
+        Photopia
+    </title>
+     <link
+     href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css"
+     rel="stylesheet"
+   />
+   <link
+     href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.3/css/bootstrap.min.css"
+     rel="stylesheet"
+   />
+   <link
+     href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.1.1/css/mdb.min.css"
+     rel="stylesheet"
+   />
+ 
+ <script
+ type="text/javascript"
+ src="https://code.jquery.com/jquery-2.2.4.min.js"
+ ></script>
+   <!-- bootstrap cdn -->
+   <link
+   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+   rel="stylesheet"
+ />
+ <!-- Google Fonts -->
+ <link
+   href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+   rel="stylesheet"
+ />
+ <!-- MDB -->
+ <link
+   href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css"
+   rel="stylesheet"
+ />
+
+ <!-- MDB -->
+<script
+type="text/javascript"
+src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"
+></script>
+</head>
+
+<style>
+    		body {
+			background:#eee;
+		}
+
+		html,
+		body,
+		.view {
+			height:100%;
+		}
+    
+		.profile-photo {
+			width:48px;
+			max-height: 100px;
+		}
+
+		.flex-menu {
+			display:flex;
+		}
+
+		.flex-menu li:not(:last-child) {
+			margin-right:40px;
+		}
+        
+
+        .button {
+        position: absolute;
+        width: 500px;
+        top: 40%;
+        margin-bottom: 30px;
+        text-align: center;
+        opacity: 0;
+        transition: opacity .35s ease;
+        }
+
+        .button a {
+        width: 200px;
+        padding: 12px 48px;
+        text-align: center;
+        color: white;
+        background-color: rgb(168, 168, 168);
+        border: solid 2px white;
+        z-index: 1;
+        }
+
+        /* #posts:hover .button {
+        opacity: 1;
+        } */
+
+        #user {
+      position: absolute;
+      right: 100px;
+      top: 17px;
+   }
+
+        /* .picture {
+          height: 200px;
+          width: 350px;
+        } */
+</style>
+    <body>
+
+	<main>
+                <!-- Navbar -->
+                <nav class="navbar navbar-expand-lg navbar-light bg-white">
+                  <div class="container-fluid">
+                  
+                    <div class="navs" id="navbarExample01">
+                      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                          <a class="nav-link" href="/">Photopia</a>
+                        </li>
+                        <% if(isLoggedIn){ %>
+                        <li class="nav-item" id="user">
+                          <a href="#"> <%= user.name %> </a>
+                        </li>
+                        <li class="nav-item" id="login" style="position:absolute; right: 20px;;">
+                          <a class="nav-link" href="/logout">Logout</a>
+                        </li>
+                       <% } else { %>
+                        <li class="nav-item" id="login" style="position:absolute; right: 20px;;">
+                          <a class="nav-link" href="/auth/google">Login</a>
+                        </li>
+                       <% } %>
+                      </ul>
+                    </div>
+                  </div>
+                </nav>
+		<div class="container">
+			<div class="row m-b-r m-t-3">
+				<div class="col-md-2 offset-md-1 ps-5">
+					<img src="<%=user.profilePic%>" alt="" class="img-circle img-fluid" style="max-height: 200px;">
+				</div>
+				<div class="col-md-9 p-t-2 ps-1" id="name">
+					<h1><%=user.name%></h1>
+				</div>
+			</div>
+
+			
+
+      <div class="container" id="posts">
+         <% for(let i=0;i<posts.length;i+=3){ %>
+            <div class="row">
+                <div class="col-md-4" onmouseover="addButton('<%=posts[i]._id%>')" onmouseout="removeButton('<%=posts[i]._id%>')">
+                <div class="card">
+                <a href="/posts/<%=posts[i]._id%>"><img class="img-fluid img-responsive card-img-top picture" src="<%=posts[i].picture%>" style="height: 230px;" alt="Card image cap"></a>
+                <div class="card-body">
+                  <p class="card-text"><%=posts[i].caption%></p>
+                  <div class="d-flex justify-content-center">
+                  <div class="button" id="<%=posts[i]._id%>"><a href="/delete/<%=posts[i]._id%>">DELETE </a>
+                 </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <% if(i+1 < posts.length) {%>
+            <div class="col-md-4" onmouseover="addButton('<%=posts[i+1]._id%>')" onmouseout="removeButton('<%=posts[i+1]._id%>')">
+                <div class="card">
+                  <a href="/posts/<%=posts[i+1]._id%>"><img class="img-fluid img-responsive card-img-top picture" src="<%=posts[i+1].picture%>" style="height: 230px;" alt="Card image cap"></a>
+                  <div class="card-body">
+                      <p class="card-text"><%=posts[i+1].caption%></p>
+                      <div class="d-flex justify-content-center">
+                      <div class="button" id="<%=posts[i+1]._id%>"><a href="/delete/<%=posts[i+1]._id%>">DELETE </a>
+                     </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+               <% } %> 
+               <% if(i+2 < posts.length) {%>
+                <div class="col-md-4" onmouseover="addButton('<%=posts[i+2]._id%>')" onmouseout="removeButton('<%=posts[i+2]._id%>')">
+                    <div class="card">
+                      <a href="/posts/<%=posts[i+2]._id%>"><img class="img-fluid img-responsive card-img-top picture" src="<%=posts[i+2].picture%>" style="height: 230px;" alt="Card image cap"></a>
+                      <div class="card-body">
+                          <p class="card-text"><%=posts[i+2].caption%></p>
+                          <div class="d-flex justify-content-center">
+                          <div class="button" id="<%=posts[i+2]._id%>"><a href="/delete/<%=posts[i+2]._id%>">DELETE </a>
+                         </div>
+                        </div>
+                      </div>
+                    </div>
+                    </div>
+                  <% } %>  
+            </div>
+            <% } %>
+          
+
+			
+		</div>
+	</main>
+    </body>
+    <script>
+      async function addButton(postID) {
+        let divEle = document.getElementById(postID).style.opacity = "1";
+      }
+      async function removeButton(postID) {
+        let divEle = document.getElementById(postID).style.opacity = "0";
+      }
+    </script>
+</head>
+</html>

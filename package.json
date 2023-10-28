@@ -1,0 +1,40 @@
+{
+  "name": "photopia",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node bin/www",
+    "dev": "nodemon bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nagulapally-Anudeep/photopia.git"
+  },
+  "author": "Anudeep, Sathya, Charan, Abhishikth",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nagulapally-Anudeep/photopia/issues"
+  },
+  "homepage": "https://github.com/Nagulapally-Anudeep/photopia#readme",
+  "dependencies": {
+    "@skynetlabs/skynet-nodejs": "^2.5.1",
+    "body-parser": "^1.19.2",
+    "cloudinary": "^1.29.0",
+    "connect-mongo": "^4.6.0",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2",
+    "formidable": "^2.0.1",
+    "mongoose": "^6.2.8",
+    "multer": "^1.4.4",
+    "multer-storage-cloudinary": "^4.0.0",
+    "passport": "^0.5.2",
+    "passport-google-oauth": "^2.0.0",
+    "passport-google-oauth20": "^2.0.0"
+  }
+}

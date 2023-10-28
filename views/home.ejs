@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    Photopia
+  </title>
+  <!-- bootstrap cdn -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css" rel="stylesheet" />
+
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"></script>
+  <!-- axios cdn -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>console.log(axios)</script>
+
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css"
+    integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+</head>
+<style>
+  /* #login
+    {
+        padding-left: 1200px;
+    } */
+  /* .card-img-top
+    {
+        max-height: 600px;
+    } */
+  .reactions {
+    margin: auto;
+  }
+
+  .nooflikes {
+    margin: auto;
+  }
+
+  #upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 10px;
+  }
+
+  form {
+    width: 100%;
+  }
+
+  #user {
+    position: absolute;
+    right: 100px;
+    top: 17px;
+  }
+
+  .upload-flex-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #caption {
+    height: 50px;
+    width: max-content;
+    border-radius: 25px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border: none;
+  }
+
+  input {
+    -webkit-box-sizing: border-box;
+    /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;
+    /* Firefox, other Gecko */
+    box-sizing: border-box;
+  }
+
+  input[type="text"]::placeholder {
+    padding-left: 10px;
+  }
+
+  input[type="text"]::first-letter {
+    padding: 10px;
+  }
+
+  .image_icon_upload{
+    background-color: rgb(69, 122, 251);
+    color: #fff;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #post-button {
+    background-color: rgb(69, 122, 251);
+    border: none;
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    height: 50px;
+    border-radius: 25px;
+    width: 150px;
+  }
+
+  @media screen and (max-width: 600px) {
+    #post-button {
+      width: 20vw;
+      height: 40px;
+      border-radius: 20px;
+      padding: 0;
+    }
+    #caption {
+      width: 40vw;
+      height: 30px;
+      border-radius: 15px;
+    }
+    .image_icon_upload{
+      width: 40px;
+      height: 40px;
+      font-size: large;
+    }
+  }
+
+  #post-button:hover {
+    background-color: rgba(69, 122, 251, 0.4);
+    color: #fff;
+  }
+
+  input[type=file]::file-selector-button {
+
+    border: none;
+    padding: 10px;
+    border-radius: .2em;
+    color: #fff;
+    background-color: rgba(69, 122, 251);
+    transition: 1s;
+    cursor: pointer;
+    height: 50px;
+    width: 150px;
+    border-radius: 25px;
+  }
+
+  input[type=file]::file-selector-button:hover {
+    background-color: #81ecec;
+  }
+</style>
+
+<body>
+
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container-fluid">
+        <div class="navs" id="navbarExample01">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" aria-current="page" href="/">Photopia</a>
+            </li>
+            <% if(isLoggedIn){ %>
+              <li class="nav-item" id="user">
+                <a href="/user">
+                  <%= user.name %>
+                </a>
+              </li>
+              <li class="nav-item" id="login" style="position:absolute; right: 20px;;">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              <% } else { %>
+                <li class="nav-item" id="login" style="position:absolute; right: 20px;;">
+                  <a class="nav-link" href="/auth/google">Login</a>
+                </li>
+                <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!-- Navbar -->
+
+  <!-- Jumbotron -->
+
+  <br>
+  <div class="container d-flex justify-content-center" id="upload">
+    <form method="POST" action="/uploadphoto" enctype="multipart/form-data" id="uploadform" class="d-flex justify-content-center">
+      <div class="upload-flex-div">
+        <div class="col-md-2">
+          <input type="file" id="image_input"
+            accept="image/jpeg, image/jpg, image/png, image/avif, image/apng, image/webp" name="photo" required style="display: none;" />
+          <label for="image_input"><i class="far fa-image fa-2x image_icon_upload"></i></label>
+        </div>
+        <div class="col-md-7">
+          <input type="text" id="caption" name="caption" placeholder="Write Caption">
+        </div>
+        <div class="col-md-3">
+          <input type="submit" value="Post" id="post-button">
+        </div>
+      </div>
+    </form>
+  </div>
+  <br>
+
+  <% posts.forEach(function(post){ %>
+    <div class="container">
+      <div class="d-flex justify-content-center">
+        <div class="card" style="width: 40rem;">
+          <div class="d-flex flex-row add-comment-section mt-2 mb-2">
+            <img class="img-fluid img-responsive rounded-circle ms-3 mt-1 mb-1" style="margin-right: 10px;"
+              src="<%=post.createdByPic%>" width="38">
+            <h5 class="mt-2">
+              <%=post.createdByName%>
+            </h5>
+          </div>
+          <img class="card-img-top" src="<%=post.picture%>" alt="Card image cap">
+          <div class="card-body">
+            <div class="reactions">
+              <i class="fa-solid fa-heart fa-2x" id="<%=post._id%>" style="color: #696969;cursor: pointer;"
+                onclick="like('<%=post._id%>')"></i>
+              <a href="/posts/<%=post._id%>"><i class="fa-solid fa-comments fa-2x"></i></a>
+            </div>
+            <p class="nooflikes">
+              <span id="noOfLikes_<%=post._id%>"></span> likes
+            </p>
+            <p class="card-text">
+              <%=post.caption%>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <br>
+
+    <% }) %>
+
+
+</body>
+<script>
+  let posts = <%- JSON.stringify(posts) %>;
+  let user = <%- JSON.stringify(user) %>;
+  for (let i = 0; i < posts.length; i++) {
+    let post = posts[i];
+    let likes = post.likes;
+    document.getElementById(`noOfLikes_${post._id}`).innerHTML = likes;
+    if (user.likedPosts.includes(post._id)) {
+      document.getElementById(`${post._id}`).style.color = 'red';
+    }
+  }
+  async function like(postID) {
+
+    let response = await fetch(`/like`, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        postID: postID
+      })
+    });
+    let data = await response.json();
+    console.log(data);
+    console.log("response", response);
+    document.getElementById('noOfLikes_' + postID).innerHTML = data.post.likes;
+    console.log(data.user.likedPosts);
+    if (data.user.likedPosts.includes(postID)) {
+      document.getElementById(postID).style.color = '#ff0000';
+    }
+    else {
+      document.getElementById(postID).style.color = '#696969';
+    }
+  }
+  // const image_input = document.querySelector("#image_input");
+
+  // image_input.addEventListener("change", function () {
+  //   const reader = new FileReader();
+  //   reader.addEventListener("load", () => {
+  //     const uploaded_image = reader.result;
+  //     document.querySelector("#display_image").style.backgroundImage = `url(${uploaded_image})`;
+  //   });
+  //   reader.readAsDataURL(this.files[0]);
+  //   var block_to_insert;
+  //   var container_block;
+
+  //   block_to_insert = document.createElement('div');
+
+  //   container_block = document.getElementById('uploadform');
+  //   block_to_insert.id = 'display_image';
+  //   container_block.appendChild(block_to_insert);
+  // });
+</script>
+
+</html>

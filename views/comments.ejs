@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    Photopia
+  </title>
+  <!-- bootstrap cdn -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+  <!-- MDB -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css" rel="stylesheet" />
+
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"></script>
+
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/fontawesome.min.css"
+    integrity="sha384-jLKHWM3JRmfMU0A5x5AkjWkw/EYfGUAGagvnfryNV3F9VqM98XiIH7VBGVoxVSc7" crossorigin="anonymous">
+</head>
+<style>
+  .reactions {
+    margin: auto;
+  }
+
+  .nooflikes {
+    margin: auto;
+  }
+
+  /* .user
+    {
+        margin-top: 10px;
+    } */
+  #user {
+    position: absolute;
+    right: 100px;
+    top: 17px;
+  }
+
+  .comment_text span {
+    font-size: large;
+    padding-left: 30px;
+  }
+
+  #comment-button {
+    background-color: rgb(69, 122, 251);
+    border: none;
+    color: #fff;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    height: 40px;
+    border-radius: 20px;
+    width: 150px;
+  }
+</style>
+
+<body>
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+      <div class="container-fluid">
+
+        <div class="navs" id="navbarExample01">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" aria-current="page" href="/">Photopia</a>
+            </li>
+            <% if(isLoggedIn){ %>
+              <li class="nav-item" id="user">
+                <a href="/user">
+                  <%= user.name %>
+                </a>
+              </li>
+              <li class="nav-item" id="login" style="position:absolute; right: 20px;;">
+                <a class="nav-link" href="/logout">Logout</a>
+              </li>
+              <% } else { %>
+                <li class="nav-item" id="login" style="position:absolute; right: 20px;;">
+                  <a class="nav-link" href="/auth/google">Login</a>
+                </li>
+                <% } %>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <br>
+    <div class="container">
+      <div class="d-flex justify-content-center">
+        <div class="card" style="width: 40rem;">
+          <div class="d-flex flex-row add-comment-section mt-2 mb-2">
+            <img class="img-fluid img-responsive rounded-circle ms-3 mt-1 mb-1" style="margin-right: 10px;"
+              src="<%=post.createdByPic%>" width="38">
+            <h5 class="mt-2">
+              <%=post.createdByName%>
+            </h5>
+          </div>
+          <img class="card-img-top" src="<%=post.picture%>" alt="Card image cap">
+          <div class="card-body">
+            <p class="card-text">
+              <%=post.caption%>
+            </p>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Add Comment</small>
+            <!-- <form action="" method="post" id="uploadform">
+                <img class="img-fluid img-responsive rounded-circle mr-2" src="https://i.imgur.com/qdiP4DB.jpg" width="38">
+                <input type="text" id="caption" placeholder="Comment" style="width: 20rem; height: fit-content; margin-bottom: 10px; margin-top: 10px;">
+                <input type="submit" value="Comment" style="border-radius: 10px; margin: auto; margin-bottom: 10px;">
+            </form> -->
+            <form action="/posts/<%=post._id%>" method="post">
+              <div class="d-flex flex-row add-comment-section mt-4 mb-4">
+                <img class="img-fluid img-responsive rounded-circle me-2" style="width: 40px;"
+                  src="<%=user.profilePic%>">
+                <input type="text" name="comment" class="form-control me-3" placeholder="Add comment">
+              </div>
+              <input type="submit" value="Comment" id="comment-button">
+            </form>
+            <p><strong>Comments</strong></p>
+
+            <% post.comments.forEach(function(comment){ %>
+              <div class="commented-section mt-2">
+                <div class="d-flex flex-row add-comment-section mt-2 mb-2"><img
+                    class="img-fluid img-responsive rounded-circle me-2" style="margin-right: 10px;"
+                    src="<%=comment.commentByPic%>" width="38">
+                  <h5 class="mt-2 fs-6">
+                    <%=comment.commentByName%>
+                  </h5>
+                </div>
+                <div class="comment-text-sm fs-5 comment_text">
+                  <span>
+                    <%=comment.content%>
+                  </span>
+                </div>
+              </div>
+              <% }) %>
+
+          </div>
+        </div>
+      </div>
+</body>
